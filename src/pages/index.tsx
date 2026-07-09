@@ -1,15 +1,16 @@
 import { RuntimeProvider } from "./RuntimeProvider";
-import { Thread } from "@assistant-ui/react-ui";
+import { Thread, ThreadList } from "@assistant-ui/react-ui";
 
 /**
  * 首页占位
  */
 export default function HomePage() {
   return (
-    <div className="h-screen w-full flex flex-col">
-      <RuntimeProvider>
+    <RuntimeProvider>
+      <div className="h-screen w-full flex">
+        <ThreadList />
         <Thread />
-      </RuntimeProvider>
-    </div>
+      </div>
+    </RuntimeProvider>
   );
 }
