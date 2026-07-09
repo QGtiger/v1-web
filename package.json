@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@assistant-ui/react": "^0.14.26",
+    "@assistant-ui/react-opencode": "^0.2.10",
+    "@assistant-ui/react-ui": "^0.2.1",
     "@lightfish/react-model": "^0.0.1",
     "@lightfish/router": "^0.0.1",
     "@tailwindcss/vite": "^4.3.0",
