@@ -1,7 +1,6 @@
+import { OPENCODE_BASE_URL } from "@/pages/constant";
 import { AssistantRuntimeProvider } from "@assistant-ui/react";
 import { useOpenCodeRuntime } from "@assistant-ui/react-opencode";
-
-const OPENCODE_BASE_URL = "http://localhost:55033";
 
 export function RuntimeProvider({
   sessionId,

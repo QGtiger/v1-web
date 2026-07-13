@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { createOpencodeClient } from "@opencode-ai/sdk/v2/client";
 import { ArrowUpIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const OPENCODE_BASE_URL = "http://localhost:55033";
+import { OPENCODE_BASE_URL } from "./constant";
 
 export default function HomePage() {
   const [input, setInput] = useState("");
