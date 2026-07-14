@@ -17,11 +17,6 @@ import {
 import { ToolFallback } from "@/components/assistant-ui/tool-fallback";
 import { TodoPanel } from "@/components/opencode/todo-panel";
 import { QuestionPanel } from "@/components/opencode/question-panel";
-import {
-  ToolGroupContent,
-  ToolGroupRoot,
-  ToolGroupTrigger,
-} from "@/components/assistant-ui/tool-group";
 import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -296,13 +291,7 @@ const AssistantMessage: FC = () => {
                   return <ToolGroup group={part}>{children}</ToolGroup>;
                 }
                 return (
-                  <ToolGroupRoot variant="ghost">
-                    <ToolGroupTrigger
-                      count={part.indices.length}
-                      active={part.status.type === "running"}
-                    />
-                    <ToolGroupContent>{children}</ToolGroupContent>
-                  </ToolGroupRoot>
+                  <div className="flex flex-col gap-0.5">{children}</div>
                 );
               case "group-reasoning": {
                 if (ReasoningGroup) {
@@ -312,7 +301,7 @@ const AssistantMessage: FC = () => {
                 }
                 const running = part.status.type === "running";
                 return (
-                  <ReasoningRoot streaming={running}>
+                  <ReasoningRoot variant="ghost" streaming={running}>
                     <ReasoningTrigger active={running} />
                     <ReasoningContent aria-busy={running}>
                       <ReasoningText>{children}</ReasoningText>

@@ -1,6 +1,7 @@
 import { OPENCODE_BASE_URL } from "@/pages/constant";
 import { TodoWriteToolUI } from "@/components/opencode/todowrite-tool-ui";
 import { QuestionToolUI } from "@/components/opencode/question-tool-ui";
+import { EditToolUI } from "@/components/opencode/edit-tool-ui";
 import { OpenCodeClientContext } from "@/components/opencode/client-context";
 import { AssistantRuntimeProvider } from "@assistant-ui/react";
 import {
@@ -30,6 +31,7 @@ export function RuntimeProvider({
       <AssistantRuntimeProvider runtime={runtime}>
         <TodoWriteToolUI />
         <QuestionToolUI />
+        <EditToolUI />
         {children}
       </AssistantRuntimeProvider>
     </OpenCodeClientContext.Provider>

@@ -30,7 +30,7 @@ const ANIMATION_DURATION = 200;
 
 const ReasoningPreviewContext = createContext(false);
 
-const reasoningVariants = cva("aui-reasoning-root mb-4 w-full", {
+const reasoningVariants = cva("aui-reasoning-root mb-0 w-full", {
   variants: {
     variant: {
       outline: "rounded-lg border px-3 py-2",
@@ -172,33 +172,38 @@ function ReasoningTrigger({
   active?: boolean;
   duration?: number;
 }) {
-  const durationText = duration ? ` (${duration}s)` : "";
+  const label = active ? "Thinking…" : "Thought";
+  const durationText = duration ? ` for ${duration}s` : "";
 
   return (
     <CollapsibleTrigger
       data-slot="reasoning-trigger"
       className={cn(
-        "aui-reasoning-trigger group/trigger text-muted-foreground hover:text-foreground flex max-w-[75%] origin-left items-center gap-2 py-1.5 text-sm transition-[color,scale] active:scale-[0.98]",
+        "aui-reasoning-trigger group/trigger text-muted-foreground hover:text-foreground flex max-w-[75%] origin-left items-center gap-2 py-1 text-xs transition-[color,scale] active:scale-[0.98]",
         className,
       )}
       {...props}
     >
       <BrainIcon
         data-slot="reasoning-trigger-icon"
-        className="aui-reasoning-trigger-icon size-4 shrink-0"
+        className="aui-reasoning-trigger-icon size-3.5 shrink-0"
       />
       <span
         data-slot="reasoning-trigger-label"
         className="aui-reasoning-trigger-label-wrapper relative inline-block leading-none tabular-nums"
       >
-        <span>Reasoning{durationText}</span>
+        <span>
+          {label}
+          {durationText}
+        </span>
         {active ? (
           <span
             aria-hidden
             data-slot="reasoning-trigger-shimmer"
             className="aui-reasoning-trigger-shimmer shimmer pointer-events-none absolute inset-0 motion-reduce:animate-none"
           >
-            Reasoning{durationText}
+            {label}
+            {durationText}
           </span>
         ) : null}
       </span>
@@ -314,7 +319,7 @@ const ReasoningGroupImpl: ReasoningGroupComponent = ({
   });
 
   return (
-    <ReasoningRoot streaming={isReasoningStreaming}>
+    <ReasoningRoot variant="ghost" streaming={isReasoningStreaming}>
       <ReasoningTrigger active={isReasoningStreaming} />
       <ReasoningContent aria-busy={isReasoningStreaming}>
         <ReasoningText>{children}</ReasoningText>

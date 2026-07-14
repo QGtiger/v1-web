@@ -5,8 +5,20 @@ import {
   AlertCircleIcon,
   CheckIcon,
   ChevronDownIcon,
+  FilePenIcon,
+  FilePlusIcon,
+  FileTextIcon,
+  FolderSearchIcon,
+  GlobeIcon,
+  ListTodoIcon,
   LoaderIcon,
+  SearchIcon,
+  TerminalIcon,
+  WrenchIcon,
   XCircleIcon,
+  BookOpenIcon,
+  CodeIcon,
+  FileDiffIcon,
 } from "lucide-react";
 import {
   useScrollLock,
@@ -95,6 +107,48 @@ const statusIconMap: Record<ToolStatus, React.ElementType> = {
   "requires-action": AlertCircleIcon,
 };
 
+const toolIconMap: Record<string, React.ElementType> = {
+  read: FileTextIcon,
+  edit: FilePenIcon,
+  write: FilePlusIcon,
+  bash: TerminalIcon,
+  grep: SearchIcon,
+  glob: FolderSearchIcon,
+  webfetch: GlobeIcon,
+  websearch: SearchIcon,
+  todowrite: ListTodoIcon,
+  apply_patch: FileDiffIcon,
+  skill: BookOpenIcon,
+  lsp: CodeIcon,
+};
+
+function extractKeyArg(toolName: string, args: unknown): string {
+  if (!args || typeof args !== "object") return "";
+  const a = args as Record<string, unknown>;
+  switch (toolName) {
+    case "read":
+    case "edit":
+    case "write":
+      return String(a.filePath ?? a.path ?? "").slice(0, 80);
+    case "bash":
+      return String(a.command ?? "").slice(0, 60);
+    case "grep":
+      return String(a.pattern ?? a.regex ?? "").slice(0, 60);
+    case "glob":
+      return String(a.pattern ?? "").slice(0, 60);
+    case "webfetch":
+      return String(a.url ?? "").slice(0, 80);
+    case "websearch":
+      return String(a.query ?? "").slice(0, 60);
+    case "apply_patch":
+      return String(a.filePath ?? "").slice(0, 80);
+    case "skill":
+      return String(a.name ?? a.skill ?? "").slice(0, 40);
+    default:
+      return "";
+  }
+}
+
 const formatToolDuration = (ms: number) => {
   if (ms < 1000) return "<1s";
   const seconds = ms / 1000;
@@ -127,46 +181,45 @@ function ToolFallbackDuration({
 function ToolFallbackTrigger({
   toolName,
   status,
+  args,
   className,
   ...props
 }: React.ComponentProps<typeof CollapsibleTrigger> & {
   toolName: string;
   status?: ToolCallMessagePartStatus;
+  args?: unknown;
 }) {
   const statusType = status?.type ?? "complete";
   const isRunning = statusType === "running";
   const isCancelled =
     status?.type === "incomplete" && status.reason === "cancelled";
 
-  const Icon = statusIconMap[statusType];
-  const label = isCancelled ? "Cancelled tool" : "Used tool";
+  const ToolIcon = toolIconMap[toolName] ?? WrenchIcon;
+  const StatusIcon = statusIconMap[statusType];
+  const keyArg = extractKeyArg(toolName, args);
 
   return (
     <CollapsibleTrigger
       data-slot="tool-fallback-trigger"
       className={cn(
-        "aui-tool-fallback-trigger group/trigger text-muted-foreground hover:text-foreground flex w-fit origin-left items-center gap-2 py-1.5 text-sm transition-[color,scale] active:scale-[0.98]",
+        "aui-tool-fallback-trigger group/trigger text-muted-foreground hover:text-foreground flex w-fit origin-left items-center gap-1.5 py-0.5 text-sm transition-[color,scale] active:scale-[0.98]",
         className,
       )}
       {...props}
     >
-      <Icon
-        data-slot="tool-fallback-trigger-icon"
-        className={cn(
-          "aui-tool-fallback-trigger-icon size-4 shrink-0",
-          isCancelled && "text-muted-foreground",
-          isRunning && "animate-spin [animation-duration:0.6s]",
-        )}
+      <ToolIcon
+        data-slot="tool-fallback-trigger-tool-icon"
+        className="aui-tool-fallback-trigger-tool-icon size-3.5 shrink-0"
       />
       <span
         data-slot="tool-fallback-trigger-label"
-        className={cn(
-          "aui-tool-fallback-trigger-label-wrapper relative inline-block text-start leading-none",
-          isCancelled && "text-muted-foreground line-through",
-        )}
+        className="aui-tool-fallback-trigger-label-wrapper relative inline-block text-start leading-none"
       >
-        <span>
-          {label}: <b>{toolName}</b>
+        <span className="font-mono text-xs">
+          <span className="text-muted-foreground">{toolName}</span>
+          {keyArg && (
+            <span className="text-foreground/70 ml-1.5">{keyArg}</span>
+          )}
         </span>
         {isRunning && (
           <span
@@ -174,15 +227,30 @@ function ToolFallbackTrigger({
             data-slot="tool-fallback-trigger-shimmer"
             className="aui-tool-fallback-trigger-shimmer shimmer pointer-events-none absolute inset-0 motion-reduce:animate-none"
           >
-            {label}: <b>{toolName}</b>
+            <span className="font-mono text-xs">
+              <span className="text-muted-foreground">{toolName}</span>
+              {keyArg && (
+                <span className="text-foreground/70 ml-1.5">{keyArg}</span>
+              )}
+            </span>
           </span>
         )}
       </span>
+      <StatusIcon
+        data-slot="tool-fallback-trigger-icon"
+        className={cn(
+          "aui-tool-fallback-trigger-icon size-3 shrink-0",
+          isCancelled && "text-muted-foreground",
+          isRunning && "animate-spin [animation-duration:0.6s]",
+          statusType === "complete" && "text-green-500",
+          statusType === "incomplete" && "text-red-500",
+        )}
+      />
       <ToolFallbackDuration />
       <ChevronDownIcon
         data-slot="tool-fallback-trigger-chevron"
         className={cn(
-          "aui-tool-fallback-trigger-chevron size-4 shrink-0",
+          "aui-tool-fallback-trigger-chevron size-3 shrink-0",
           "transition-transform duration-(--animation-duration) ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none",
           "group-data-[state=closed]/trigger:-rotate-90",
           "group-data-[state=open]/trigger:rotate-0",
@@ -527,6 +595,7 @@ function ToolFallbackApproval({
 
 const ToolFallbackImpl: ToolCallMessagePartComponent = ({
   toolName,
+  args,
   argsText,
   result,
   status,
@@ -550,7 +619,7 @@ const ToolFallbackImpl: ToolCallMessagePartComponent = ({
 
   return (
     <ToolFallbackRoot open={open} onOpenChange={setOpen}>
-      <ToolFallbackTrigger toolName={toolName} status={status} />
+      <ToolFallbackTrigger toolName={toolName} status={status} args={args} />
       <ToolFallbackContent>
         <ToolFallbackError status={status} />
         <ToolFallbackArgs
