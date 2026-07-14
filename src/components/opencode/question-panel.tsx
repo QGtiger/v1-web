@@ -71,15 +71,13 @@ function StepQuestion({
             </button>
           );
         })}
-        {question.custom && (
-          <input
-            type="text"
-            value={customText}
-            onChange={(e) => onCustomChange(e.target.value)}
-            placeholder="Type a custom answer…"
-            className="mt-1 rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
-          />
-        )}
+        <input
+          type="text"
+          value={customText}
+          onChange={(e) => onCustomChange(e.target.value)}
+          placeholder="Or type your own answer…"
+          className="mt-1.5 rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+        />
       </div>
     </div>
   );
