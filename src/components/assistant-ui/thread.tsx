@@ -15,6 +15,8 @@ import {
   ReasoningTrigger,
 } from "@/components/assistant-ui/reasoning";
 import { ToolFallback } from "@/components/assistant-ui/tool-fallback";
+import { TodoPanel } from "@/components/opencode/todo-panel";
+import { QuestionPanel } from "@/components/opencode/question-panel";
 import {
   ToolGroupContent,
   ToolGroupRoot,
@@ -91,7 +93,9 @@ const ThreadComponentsContext =
 const isNewChatView = (s: AssistantState) =>
   s.thread.messages.length === 0 && !s.thread.isRunning;
 
-export const Thread: FC<ThreadProps> = ({ components = EMPTY_COMPONENTS }) => {
+export const Thread: FC<ThreadProps> = ({
+  components = EMPTY_COMPONENTS,
+}) => {
   const isEmpty = useAuiState(isNewChatView);
 
   return (
@@ -148,6 +152,8 @@ const ThreadRoot: FC<{ isEmpty: boolean }> = ({ isEmpty }) => {
           >
             <ThreadScrollToBottom />
             <ThreadFollowupSuggestions />
+            <TodoPanel />
+            <QuestionPanel />
             <Composer />
             <AuiIf condition={(s) => isNewChatView(s) && s.composer.isEmpty}>
               <ThreadSuggestions />

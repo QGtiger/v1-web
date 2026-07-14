@@ -1,6 +1,13 @@
 import { OPENCODE_BASE_URL } from "@/pages/constant";
+import { TodoWriteToolUI } from "@/components/opencode/todowrite-tool-ui";
+import { QuestionToolUI } from "@/components/opencode/question-tool-ui";
+import { OpenCodeClientContext } from "@/components/opencode/client-context";
 import { AssistantRuntimeProvider } from "@assistant-ui/react";
-import { useOpenCodeRuntime } from "@assistant-ui/react-opencode";
+import {
+  createOpencodeClient,
+  useOpenCodeRuntime,
+} from "@assistant-ui/react-opencode";
+import { useMemo } from "react";
 
 export function RuntimeProvider({
   sessionId,
@@ -9,14 +16,22 @@ export function RuntimeProvider({
   sessionId: string;
   children: React.ReactNode;
 }) {
+  const client = useMemo(
+    () => createOpencodeClient({ baseUrl: OPENCODE_BASE_URL }),
+    [],
+  );
   const runtime = useOpenCodeRuntime({
-    baseUrl: OPENCODE_BASE_URL,
+    client,
     initialSessionId: sessionId,
   });
 
   return (
-    <AssistantRuntimeProvider runtime={runtime}>
-      {children}
-    </AssistantRuntimeProvider>
+    <OpenCodeClientContext.Provider value={client}>
+      <AssistantRuntimeProvider runtime={runtime}>
+        <TodoWriteToolUI />
+        <QuestionToolUI />
+        {children}
+      </AssistantRuntimeProvider>
+    </OpenCodeClientContext.Provider>
   );
 }
