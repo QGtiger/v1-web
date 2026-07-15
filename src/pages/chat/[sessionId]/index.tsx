@@ -1,10 +1,13 @@
 import { RuntimeProvider } from "./RuntimeProvider";
+import { WorkspaceProvider } from "./model";
 import { Thread } from "@/components/assistant-ui/thread";
+import { WorkspacePanel } from "./components/workspace-panel";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useParams } from "react-router-dom";
 import { useRequest } from "ahooks";
 import { serverApi } from "@/pages/models";
 import { LoaderIcon } from "lucide-react";
+import { Panel, Group, Separator } from "react-resizable-panels";
 
 type WorkspaceInfo = {
   sessionId: string;
@@ -38,11 +41,23 @@ export default function ChatPage() {
 
   return (
     <TooltipProvider>
-      <RuntimeProvider sessionId={sessionId} directory={data.directory}>
-        <div className="h-screen w-full">
-          <Thread />
-        </div>
-      </RuntimeProvider>
+      <WorkspaceProvider value={sessionId}>
+        <RuntimeProvider sessionId={sessionId} directory={data.directory}>
+          <Group orientation="horizontal" className="h-screen overflow-hidden">
+            <Panel defaultSize={40} minSize={25}>
+              <div className="h-screen overflow-hidden">
+                <Thread />
+              </div>
+            </Panel>
+            <Separator className="w-px bg-border transition-colors hover:bg-primary/50" />
+            <Panel defaultSize={60} minSize={30}>
+              <div className="h-full overflow-hidden">
+                <WorkspacePanel />
+              </div>
+            </Panel>
+          </Group>
+        </RuntimeProvider>
+      </WorkspaceProvider>
     </TooltipProvider>
   );
 }
