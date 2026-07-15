@@ -1,5 +1,5 @@
 {
-  "name": "ai-web",
+  "name": "v1-web",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:online": "vite build && lightfish-server build && lightfish-server db push"
   },
   "dependencies": {
     "@assistant-ui/react": "^0.14.26",
@@ -21,6 +22,7 @@
     "@radix-ui/react-slot": "^1.3.0",
     "@tailwindcss/vite": "^4.3.0",
     "ahooks": "^3.9.7",
+    "ali-oss": "^6.23.0",
     "axios": "^1.18.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

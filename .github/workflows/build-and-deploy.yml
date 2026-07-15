@@ -1,0 +1,11 @@
+name: Deploy
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    uses: QGtiger/.github/.github/workflows/deploy-oss.yml@main
+    secrets: inherit
+    with:
+      APP_NAME: "v1-web" # 每个项目只改这里！

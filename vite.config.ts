@@ -11,7 +11,10 @@ function normalizeBase(raw: string | undefined): string {
 }
 
 function defineAppConfig() {
-  return {};
+  return {
+    OPENCODE_BASE_URL: "http://localhost:55001",
+    SERVER_BASE_URL: "http://localhost:3060",
+  };
 }
 
 /** 仅本地 dev（vite serve）时在 HTML 最前注入，先于应用脚本执行 */

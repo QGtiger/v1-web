@@ -1,7 +1,13 @@
-import { pgSchema, integer, varchar, boolean, timestamp } from 'drizzle-orm/pg-core';
+import {
+  pgSchema,
+  integer,
+  varchar,
+  boolean,
+  timestamp,
+} from "drizzle-orm/pg-core";
 
 // 使用应用名称作为schema前缀
-const appSchema = pgSchema('ai-web');
+const appSchema = pgSchema("v1-web");
 
 /**
  * 用户表
