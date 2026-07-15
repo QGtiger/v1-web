@@ -6,7 +6,7 @@ import { ChatHeader } from "./components/chat-header";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useParams } from "react-router-dom";
 import { useRequest } from "ahooks";
-import { serverApi } from "@/pages/models";
+import { serverApi } from "@/models";
 import { LoaderIcon } from "lucide-react";
 import { Panel, Group, Separator } from "react-resizable-panels";
 

@@ -1,9 +1,11 @@
 import { useOpenCodeSession } from "@assistant-ui/react-opencode";
+import { useIsThreadLoading } from "@/models";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeftIcon } from "lucide-react";
 
 export function ChatHeader() {
   const session = useOpenCodeSession();
+  const isLoading = useIsThreadLoading();
   const navigate = useNavigate();
 
   return (
@@ -14,9 +16,13 @@ export function ChatHeader() {
       >
         <ArrowLeftIcon className="size-4" />
       </button>
-      <span className="truncate text-sm font-medium text-foreground">
-        {session?.title || "New session"}
-      </span>
+      {isLoading ? (
+        <div className="h-3.5 w-32 animate-pulse rounded bg-muted" />
+      ) : (
+        <span className="truncate text-sm font-medium text-foreground">
+          {session?.title || "New session"}
+        </span>
+      )}
     </div>
   );
 }

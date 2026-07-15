@@ -9,7 +9,7 @@ import {
   SettingsIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { opencodeClient, serverApi } from "./models";
+import { opencodeClient, serverApi } from "@/models";
 
 type Session = {
   id: string;
