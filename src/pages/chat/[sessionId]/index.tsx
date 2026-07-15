@@ -54,9 +54,15 @@ export default function ChatPage() {
                 <div className="pointer-events-none absolute inset-x-0 top-12 z-10 h-6 bg-gradient-to-b from-background to-transparent" />
               </div>
             </Panel>
-            <Separator className="w-px bg-gradient-to-b from-transparent via-border to-transparent" />
+            <Separator
+              className="w-1 cursor-col-resize opacity-0 transition-opacity duration-200 hover:opacity-100 active:opacity-100"
+              style={{
+                background:
+                  "linear-gradient(180deg, transparent 5%, rgba(57, 139, 255, 0.5) 50%, transparent 95%)",
+              }}
+            />
             <Panel defaultSize={60} minSize={30}>
-              <div className="h-full overflow-hidden">
+              <div className="h-full overflow-hidden border-l border-border ">
                 <WorkspacePanel />
               </div>
             </Panel>
