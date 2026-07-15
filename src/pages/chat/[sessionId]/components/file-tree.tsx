@@ -88,13 +88,14 @@ function TreeNode({
       <button
         onClick={() => onSelect(node.path)}
         className={cn(
-          "flex w-full items-center gap-1.5 rounded px-1.5 py-0.5 text-left text-xs transition-colors",
+          "flex w-full items-center gap-1 rounded py-0.5 text-left text-xs transition-colors",
           isSelected
             ? "bg-accent text-foreground"
             : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
         )}
         style={{ paddingLeft: depth * 12 + 6 }}
       >
+        <span className="size-3 shrink-0" />
         <FileIcon className="size-3 shrink-0" />
         <span className="truncate">{node.name}</span>
       </button>
@@ -104,7 +105,7 @@ function TreeNode({
   return (
     <Collapsible open={open} onOpenChange={setOpen}>
       <CollapsibleTrigger
-        className="flex w-full items-center gap-1 rounded px-1.5 py-0.5 text-left text-xs text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground"
+        className="flex w-full items-center gap-1 rounded py-0.5 text-left text-xs text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground"
         style={{ paddingLeft: depth * 12 + 6 }}
       >
         <ChevronRightIcon

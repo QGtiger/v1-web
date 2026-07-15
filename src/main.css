@@ -227,8 +227,12 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
     }
+  *:focus,
+  *:focus-visible {
+    outline: none;
+  }
   body {
     @apply bg-background text-foreground;
     }
@@ -260,5 +264,9 @@
   }
   .code-scroll::-webkit-scrollbar-thumb:hover {
     background-color: var(--color-muted-foreground);
+  }
+  .code-scroll pre,
+  .code-scroll code {
+    background: transparent !important;
   }
 }
