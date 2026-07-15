@@ -48,7 +48,7 @@ export default function ChatPage() {
             <Panel defaultSize={40} minSize={25}>
               <div className="relative flex h-screen flex-col overflow-hidden">
                 <ChatHeader />
-                <div className="flex-1 overflow-hidden">
+                <div className="flex-1 overflow-hidden text-sm">
                   <Thread />
                 </div>
                 <div className="pointer-events-none absolute inset-x-0 top-12 z-10 h-6 bg-gradient-to-b from-background to-transparent" />

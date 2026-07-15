@@ -247,24 +247,25 @@
     display: none;
   }
 
-  .code-scroll {
+  * {
     scrollbar-width: thin;
     scrollbar-color: var(--color-border) transparent;
   }
-  .code-scroll::-webkit-scrollbar {
+  *::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
-  .code-scroll::-webkit-scrollbar-track {
+  *::-webkit-scrollbar-track {
     background: transparent;
   }
-  .code-scroll::-webkit-scrollbar-thumb {
+  *::-webkit-scrollbar-thumb {
     background-color: var(--color-border);
     border-radius: 3px;
   }
-  .code-scroll::-webkit-scrollbar-thumb:hover {
+  *::-webkit-scrollbar-thumb:hover {
     background-color: var(--color-muted-foreground);
   }
+
   .code-scroll pre,
   .code-scroll code {
     background: transparent !important;

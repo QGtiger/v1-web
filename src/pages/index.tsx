@@ -14,6 +14,7 @@ import { opencodeClient, serverApi } from "@/models";
 type Session = {
   id: string;
   title: string;
+  parentID?: string;
   time: {
     created: number;
     updated: number;
@@ -45,7 +46,7 @@ function SessionSidebar() {
   const { data: sessions = [], loading } = useRequest(
     async () => {
       const res = await opencodeClient.session.list();
-      return (res.data as Session[]) ?? [];
+      return ((res.data as Session[]) ?? []).filter((s) => !s.parentID);
     },
     { refreshDeps: [location.key] },
   );
@@ -119,9 +120,11 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   const { runAsync: createWorkspace, loading } = useRequest(
-    async () => {
-      const res =
-        await serverApi.post<CreateWorkspaceResponse>("/api/workspaces");
+    async (message: string) => {
+      const res = await serverApi.post<CreateWorkspaceResponse>(
+        "/api/workspaces",
+        { message },
+      );
       return res.data;
     },
     { manual: true },
@@ -131,7 +134,7 @@ export default function HomePage() {
     const text = input.trim();
     if (!text || loading) return;
     try {
-      const data = await createWorkspace();
+      const data = await createWorkspace(text);
       if (!data?.sessionId) throw new Error("Failed to create session");
       navigate(`/chat/${data.sessionId}`);
     } catch (err) {
