@@ -1,4 +1,4 @@
-import { opencodeClient } from "@/pages/models";
+import { OPENCODE_BASE_URL } from "@/pages/constant";
 import { TodoWriteToolUI } from "@/components/opencode/todowrite-tool-ui";
 import { QuestionToolUI } from "@/components/opencode/question-tool-ui";
 import { EditToolUI } from "@/components/opencode/edit-tool-ui";
@@ -6,22 +6,32 @@ import { WriteToolUI } from "@/components/opencode/write-tool-ui";
 import { TaskToolUI } from "@/components/opencode/task-tool-ui";
 import { OpenCodeClientContext } from "@/components/opencode/client-context";
 import { AssistantRuntimeProvider } from "@assistant-ui/react";
-import { useOpenCodeRuntime } from "@assistant-ui/react-opencode";
+import {
+  createOpencodeClient,
+  useOpenCodeRuntime,
+} from "@assistant-ui/react-opencode";
+import { useMemo } from "react";
 
 export function RuntimeProvider({
   sessionId,
+  directory,
   children,
 }: {
   sessionId: string;
+  directory: string;
   children: React.ReactNode;
 }) {
+  const client = useMemo(
+    () => createOpencodeClient({ baseUrl: OPENCODE_BASE_URL, directory }),
+    [directory],
+  );
   const runtime = useOpenCodeRuntime({
-    client: opencodeClient,
+    client,
     initialSessionId: sessionId,
   });
 
   return (
-    <OpenCodeClientContext.Provider value={opencodeClient}>
+    <OpenCodeClientContext.Provider value={client}>
       <AssistantRuntimeProvider runtime={runtime}>
         <TodoWriteToolUI />
         <QuestionToolUI />

@@ -1,8 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { ArrowUpIcon, PlusIcon, MessageSquareIcon, BotIcon, SettingsIcon } from "lucide-react";
+import { useRequest } from "ahooks";
+import {
+  ArrowUpIcon,
+  PlusIcon,
+  MessageSquareIcon,
+  BotIcon,
+  SettingsIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
-import { opencodeClient } from "./models";
+import { opencodeClient, serverApi } from "./models";
 
 type Session = {
   id: string;
@@ -11,6 +18,13 @@ type Session = {
     created: number;
     updated: number;
   };
+};
+
+type CreateWorkspaceResponse = {
+  sessionId: string;
+  directory: string;
+  previewPort: number;
+  previewUrl: string;
 };
 
 function formatRelativeTime(timestamp: number): string {
@@ -28,26 +42,13 @@ function formatRelativeTime(timestamp: number): string {
 function SessionSidebar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [sessions, setSessions] = useState<Session[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let cancelled = false;
-    opencodeClient.session
-      .list()
-      .then((res) => {
-        if (cancelled) return;
-        setSessions((res.data as Session[]) ?? []);
-        setLoading(false);
-      })
-      .catch(() => {
-        if (cancelled) return;
-        setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [location.key]);
+  const { data: sessions = [], loading } = useRequest(
+    async () => {
+      const res = await opencodeClient.session.list();
+      return (res.data as Session[]) ?? [];
+    },
+    { refreshDeps: [location.key] },
+  );
 
   return (
     <aside className="flex h-full w-[260px] shrink-0 flex-col border-r border-border bg-muted/30">
@@ -115,21 +116,26 @@ function SessionSidebar() {
 
 export default function HomePage() {
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const { runAsync: createWorkspace, loading } = useRequest(
+    async () => {
+      const res =
+        await serverApi.post<CreateWorkspaceResponse>("/api/workspaces");
+      return res.data;
+    },
+    { manual: true },
+  );
 
   const handleSubmit = async () => {
     const text = input.trim();
     if (!text || loading) return;
-
-    setLoading(true);
     try {
-      const res = await opencodeClient.session.create({});
-      if (!res.data?.id) throw new Error("Failed to create session");
-      navigate(`/chat/${res.data.id}`, { state: { initialMessage: text } });
+      const data = await createWorkspace();
+      if (!data?.sessionId) throw new Error("Failed to create session");
+      navigate(`/chat/${data.sessionId}`);
     } catch (err) {
       console.error(err);
-      setLoading(false);
     }
   };
 
