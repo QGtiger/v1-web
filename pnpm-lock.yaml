@@ -100,8 +100,8 @@ importers:
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.4.0(jiti@2.7.0))
       '@lightfish/server':
-        specifier: ^0.0.22
-        version: 0.0.22(drizzle-orm@0.45.2(@types/pg@8.20.0)(pg@8.22.0))(pg@8.22.0)
+        specifier: ^0.0.24
+        version: 0.0.24(drizzle-orm@0.45.2(@types/pg@8.20.0)(pg@8.22.0))(pg@8.22.0)
       '@types/node':
         specifier: ^24.12.3
         version: 24.12.4
@@ -1031,8 +1031,8 @@ packages:
       react: '>=18'
       react-router-dom: 6.21.1
 
-  '@lightfish/server@0.0.22':
-    resolution: {integrity: sha512-JPHka5yyVrLG92/HOmHlo9KIH6mIb86zjv+HyHCpHoFr9j4GRgOAVIqun44E1uEHCorJhZucF7dVea6gksKgTw==}
+  '@lightfish/server@0.0.24':
+    resolution: {integrity: sha512-mPYtA78lyBeDyxUWBnf7peQLByKVrHec7oSe3U+1O9APt2Ox72vtc+Kwxf4M0ME/yKPYtFgOz0yb+wF8GVtyag==}
     hasBin: true
     peerDependencies:
       drizzle-orm: ^0.45.2
@@ -2913,6 +2913,10 @@ packages:
   get-own-enumerable-keys@1.0.0:
     resolution: {integrity: sha512-PKsK2FSrQCyxcGHsGrLDcK0lx+0Ke+6e8KFFozA9/fIQLhQzPaRvJFdcz7+Axg3jUH/Mq+NI4xa5u/UT2tQskA==}
     engines: {node: '>=14.16'}
+
+  get-port@5.1.1:
+    resolution: {integrity: sha512-g/Q1aTSDOxFpchXC4i8ZWvxA1lnPqx/JHqcpIw0/LX9T8x/GBbi6YnlN5nhaKIFkT8oFsscUKgDJYxfwfS6QsQ==}
+    engines: {node: '>=8'}
 
   get-proto@1.0.1:
     resolution: {integrity: sha512-sTSfBjoXBp89JvIKIefqw7U2CCebsc74kiY6awiGogKtoSGbgjYE/G/+l9sF3MWFPNc9IcoOC4ODfKHfxFmp0g==}
@@ -5212,7 +5216,7 @@ snapshots:
       react: 19.2.6
       react-router-dom: 6.21.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
 
-  '@lightfish/server@0.0.22(drizzle-orm@0.45.2(@types/pg@8.20.0)(pg@8.22.0))(pg@8.22.0)':
+  '@lightfish/server@0.0.24(drizzle-orm@0.45.2(@types/pg@8.20.0)(pg@8.22.0))(pg@8.22.0)':
     dependencies:
       '@hono/node-server': 1.19.14(hono@4.12.28)
       '@types/pg': 8.20.0
@@ -5223,6 +5227,7 @@ snapshots:
       drizzle-kit: 0.31.10
       drizzle-orm: 0.45.2(@types/pg@8.20.0)(pg@8.22.0)
       esbuild: 0.25.12
+      get-port: 5.1.1
       hono: 4.12.28
       pg: 8.22.0
       prompts: 2.4.2
@@ -7125,6 +7130,8 @@ snapshots:
   get-nonce@1.0.1: {}
 
   get-own-enumerable-keys@1.0.0: {}
+
+  get-port@5.1.1: {}
 
   get-proto@1.0.1:
     dependencies:

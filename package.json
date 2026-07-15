@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@lightfish/server": "^0.0.22",
+    "@lightfish/server": "^0.0.24",
     "@types/node": "^24.12.3",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",

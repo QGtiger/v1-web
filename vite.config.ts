@@ -11,9 +11,7 @@ function normalizeBase(raw: string | undefined): string {
 }
 
 function defineAppConfig() {
-  return {
-    SERVER_API: "/api",
-  };
+  return {};
 }
 
 /** 仅本地 dev（vite serve）时在 HTML 最前注入，先于应用脚本执行 */
@@ -54,13 +52,5 @@ export default defineConfig({
   },
   server: {
     host: "0.0.0.0",
-
-    proxy: {
-      "/api": {
-        target: "http://localhost:3000",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
-      },
-    },
   },
 });
