@@ -2,6 +2,7 @@ import { RuntimeProvider } from "./RuntimeProvider";
 import { WorkspaceProvider } from "./model";
 import { Thread } from "@/components/assistant-ui/thread";
 import { WorkspacePanel } from "./components/workspace-panel";
+import { ChatHeader } from "./components/chat-header";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useParams } from "react-router-dom";
 import { useRequest } from "ahooks";
@@ -45,11 +46,15 @@ export default function ChatPage() {
         <RuntimeProvider sessionId={sessionId} directory={data.directory}>
           <Group orientation="horizontal" className="h-screen overflow-hidden">
             <Panel defaultSize={40} minSize={25}>
-              <div className="h-screen overflow-hidden">
-                <Thread />
+              <div className="relative flex h-screen flex-col overflow-hidden">
+                <ChatHeader />
+                <div className="flex-1 overflow-hidden">
+                  <Thread />
+                </div>
+                <div className="pointer-events-none absolute inset-x-0 top-12 z-10 h-6 bg-gradient-to-b from-background to-transparent" />
               </div>
             </Panel>
-            <Separator className="w-px bg-border transition-colors hover:bg-primary/50" />
+            <Separator className="w-px bg-gradient-to-b from-transparent via-border to-transparent" />
             <Panel defaultSize={60} minSize={30}>
               <div className="h-full overflow-hidden">
                 <WorkspacePanel />
