@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MonitorIcon, CodeIcon, EyeIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PreviewTab } from "./preview-tab";
+import { CodeTab } from "./code-tab";
 import { PlaceholderTab } from "./placeholder-tab";
 
 type TabId = "preview" | "code" | "monitor";
@@ -42,16 +43,12 @@ export function WorkspacePanel() {
         })}
       </div>
 
-      <div className="flex-1 overflow-hidden">
+      <div className="min-h-0 flex-1 overflow-hidden">
         <div className={cn("h-full", activeTab === "preview" ? "block" : "hidden")}>
           <PreviewTab />
         </div>
         <div className={cn("h-full", activeTab === "code" ? "block" : "hidden")}>
-          <PlaceholderTab
-            icon={CodeIcon}
-            title="Code View"
-            description="Browse and edit project files"
-          />
+          <CodeTab />
         </div>
         <div className={cn("h-full", activeTab === "monitor" ? "block" : "hidden")}>
           <PlaceholderTab
