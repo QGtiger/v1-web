@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { PreviewTab } from "./preview-tab";
 import { CodeTab } from "./code-tab";
 import { PlaceholderTab } from "./placeholder-tab";
+import { PublishButton } from "./publish-button";
 
 type TabId = "preview" | "code" | "monitor";
 
@@ -41,6 +42,7 @@ export function WorkspacePanel() {
             </button>
           );
         })}
+        <PublishButton />
       </div>
 
       <div className="min-h-0 flex-1 overflow-hidden">

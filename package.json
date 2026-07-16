@@ -24,6 +24,7 @@
     "ahooks": "^3.9.7",
     "ali-oss": "^6.23.0",
     "axios": "^1.18.1",
+    "canvas-confetti": "^1.9.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "diff": "^9.0.0",
@@ -47,6 +48,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@lightfish/server": "^0.0.24",
+    "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^24.12.3",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
