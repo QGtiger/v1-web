@@ -9,6 +9,7 @@ import { useRequest } from "ahooks";
 import { serverApi } from "@/models";
 import { LoaderIcon } from "lucide-react";
 import { Panel, Group, Separator } from "react-resizable-panels";
+// import { useEffect, useRef } from "react";
 
 type WorkspaceInfo = {
   sessionId: string;
@@ -29,6 +30,21 @@ export default function ChatPage() {
     },
     { refreshDeps: [sessionId] },
   );
+
+  // 退出会话页时停掉 vite 预览释放内存。
+  // StrictMode 下双挂载会触发模拟卸载，用 aliveRef + microtask 确保只在真正卸载时调一次。
+  // const aliveRef = useRef(true);
+  // useEffect(() => {
+  //   aliveRef.current = true;
+  //   return () => {
+  //     aliveRef.current = false;
+  //     queueMicrotask(() => {
+  //       // 重新挂载（StrictMode 模拟卸载）会把 aliveRef 置回 true → 跳过
+  //       if (aliveRef.current || !sessionId) return;
+  //       serverApi.post(`/api/workspaces/${sessionId}/stop`).catch(() => {});
+  //     });
+  //   };
+  // }, [sessionId]);
 
   if (!sessionId) return null;
 

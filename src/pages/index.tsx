@@ -1,15 +1,27 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useRequest } from "ahooks";
+import { Menu } from "@base-ui/react/menu";
 import {
   ArrowUpIcon,
   PlusIcon,
   MessageSquareIcon,
   BotIcon,
   SettingsIcon,
+  MoreHorizontalIcon,
+  Trash2Icon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { opencodeClient, serverApi } from "@/models";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 type Session = {
   id: string;
@@ -43,13 +55,45 @@ function formatRelativeTime(timestamp: number): string {
 function SessionSidebar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { data: sessions = [], loading } = useRequest(
+  const { data: sessions = [], loading, refresh } = useRequest(
     async () => {
       const res = await opencodeClient.session.list();
       return ((res.data as Session[]) ?? []).filter((s) => !s.parentID);
     },
     { refreshDeps: [location.key] },
   );
+
+  const [deleteTarget, setDeleteTarget] = useState<Session | null>(null);
+
+  const { runAsync: deleteSession, loading: deleting } = useRequest(
+    async (id: string) => {
+      try {
+        await serverApi.delete(`/api/workspaces/${id}`);
+      } catch (e: unknown) {
+        const status = (e as { response?: { status?: number } })?.response
+          ?.status;
+        // 无 workspace 映射时兜底直接删 opencode session
+        if (status === 404) {
+          await opencodeClient.session.delete({ sessionID: id });
+        } else {
+          throw e;
+        }
+      }
+    },
+    { manual: true },
+  );
+
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget || deleting) return;
+    try {
+      await deleteSession(deleteTarget.id);
+      await refresh();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setDeleteTarget(null);
+    }
+  };
 
   return (
     <aside className="flex h-full w-[260px] shrink-0 flex-col border-r border-border bg-muted/30">
@@ -85,13 +129,21 @@ function SessionSidebar() {
         ) : (
           <div className="space-y-0.5">
             {sessions.map((session) => (
-              <button
+              <div
                 key={session.id}
+                role="button"
+                tabIndex={0}
                 onClick={() => navigate(`/chat/${session.id}`)}
-                className="group flex w-full items-start gap-2 rounded-lg px-2.5 py-2 text-left text-sm transition-colors hover:bg-accent"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    navigate(`/chat/${session.id}`);
+                  }
+                }}
+                className="group relative flex w-full cursor-pointer items-start gap-2 rounded-lg px-2.5 py-2 text-left text-sm transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
               >
                 <MessageSquareIcon className="mt-0.5 size-3.5 shrink-0 text-muted-foreground" />
-                <div className="min-w-0 flex-1">
+                <div className="min-w-0 flex-1 pr-6">
                   <div className="truncate text-foreground/80">
                     {session.title || "New session"}
                   </div>
@@ -99,7 +151,33 @@ function SessionSidebar() {
                     {formatRelativeTime(session.time.updated)}
                   </div>
                 </div>
-              </button>
+
+                <Menu.Root>
+                  <Menu.Trigger
+                    render={<button type="button" aria-label="会话操作" />}
+                    onClick={(e) => e.stopPropagation()}
+                    className="absolute right-1 top-1/2 inline-flex size-6 -translate-y-1/2 items-center justify-center rounded-md text-muted-foreground opacity-0 transition-opacity hover:bg-accent hover:text-foreground group-hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none data-[popup-open]:opacity-100"
+                  >
+                    <MoreHorizontalIcon className="size-4" />
+                  </Menu.Trigger>
+                  <Menu.Portal>
+                    <Menu.Positioner align="end" sideOffset={4}>
+                      <Menu.Popup className="z-50 min-w-[8rem] overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95">
+                        <Menu.Item
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setDeleteTarget(session);
+                          }}
+                          className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-destructive outline-none transition-colors hover:bg-destructive/10 data-highlighted:bg-destructive/10"
+                        >
+                          <Trash2Icon className="size-3.5" />
+                          删除
+                        </Menu.Item>
+                      </Menu.Popup>
+                    </Menu.Positioner>
+                  </Menu.Portal>
+                </Menu.Root>
+              </div>
             ))}
           </div>
         )}
@@ -111,6 +189,38 @@ function SessionSidebar() {
           Settings
         </button>
       </div>
+
+      <Dialog
+        open={deleteTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setDeleteTarget(null);
+        }}
+      >
+        <DialogContent showCloseButton={false}>
+          <DialogHeader>
+            <DialogTitle>删除会话</DialogTitle>
+            <DialogDescription>
+              确定删除「{deleteTarget?.title || "New session"}」吗？此操作不可撤销，将同时删除工作区文件和预览服务。
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setDeleteTarget(null)}
+              disabled={deleting}
+            >
+              取消
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleConfirmDelete}
+              disabled={deleting}
+            >
+              {deleting ? "删除中…" : "删除"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </aside>
   );
 }
